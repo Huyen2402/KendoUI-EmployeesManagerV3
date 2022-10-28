@@ -5,21 +5,77 @@
 }
 
 
+@*@(Html.Kendo().Grid<KendoUI_EmployeesManagerV3.Models.Employees>()
+        .Name("Grid")
+        .Columns(columns => {
+            columns.Bound(o => o.Name).Groupable(false);
+            columns.Bound(o => o.Email);
+            columns.Bound(o => o.Address);
+            columns.Bound(o => o.Phone);
+        })
+        .Pageable()
+        .Sortable()
+        .Filterable()
+        .Groupable()
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("getList", "Employees"))
+             .PageSize(2)
+        )
+    )*@
+
 @(Html.Kendo().Grid<KendoUI_EmployeesManagerV3.Models.Employees>()
-    .Name("Grid")
+    .Name("Employees")
     .Columns(columns => {
-        columns.Bound(o => o.Name).Groupable(false);
-        columns.Bound(o => o.Email);
-        columns.Bound(o => o.Address);
-        columns.Bound(o => o.Phone);
+        columns.Bound(p => p.Name);
+        columns.Bound(p => p.Address).Width(140);
+        columns.Bound(p => p.Email).Width(140);
+        columns.Bound(p => p.Phone).Width(100);
+        columns.Command(cmd =>
+        {
+            cmd.Edit();
+            cmd.Destroy();
+        });
     })
+
+    .ToolBar(toolbar => {
+        toolbar.Create();
+        toolbar.Save();
+    })
+    .Height(500)
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
     .Pageable()
+    
+    .Navigatable()
     .Sortable()
-    .Filterable()
-    .Groupable()
-    .DataSource(dataSource => dataSource
-        .Ajax()
-        .Read(read => read.Action("getList", "Employees"))
-         .PageSize(2)
+    .Scrollable()
+   .DataSource(datasource => datasource
+    .Ajax()
+    .Read(read => read.Action("getList", "Employees"))
+    .PageSize(2)
+    .Create(c => c.Action("Create", "Employees"))
+    .Update(c => c.Action("Update", "Employees"))
+    .Destroy(c => c.Action("Delete", "Employees"))
+
+
+    .Model(m =>
+    {
+        m.Id(p => p.Id);
+        m.Field(p => p.Id).Editable(false).DefaultValue(0);
+    })
+
     )
+
+
+
+
+
+
 )
+<script>
+    function parameterMap(options, operation) {
+        if (operation !== "read" && options.models) {
+            return { models: kendo.stringify(options.models) };
+        }
+    }
+</script>
