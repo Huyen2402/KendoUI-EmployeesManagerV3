@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@(Html.Kendo().Grid<KendoUI_EmployeesManagerV3.Models.Employees>()
+    .Name("Grid")
+    .Columns(columns => {
+        columns.Bound(o => o.Name).Groupable(false);
+        columns.Bound(o => o.Email);
+        columns.Bound(o => o.Address);
+        columns.Bound(o => o.Phone);
+    })
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("getList", "Employees"))
+         .PageSize(2)
+    )
+)
