@@ -24,44 +24,49 @@
         )
     )*@
 
-@(Html.Kendo().Grid<KendoUI_EmployeesManagerV3.Models.Employees>()
+@(Html.Kendo().Grid<KendoUI_EmployeesManagerV3.Models.Employees>
+    ()
     .Name("Employees")
+
     .Columns(columns => {
-        columns.Bound(p => p.Name);
-        columns.Bound(p => p.Address).Width(140);
-        columns.Bound(p => p.Email).Width(140);
-        columns.Bound(p => p.Phone).Width(100);
-        columns.Command(cmd =>
-        {
-            cmd.Edit();
-            cmd.Destroy();
-        });
+    columns.Bound(p => p.Name);
+    columns.Bound(p => p.Address);
+    columns.Bound(p => p.Email);
+    columns.Bound(p => p.Phone);
+    columns.Command(cmd =>
+    {
+
+    cmd.Destroy();
+    });
     })
 
     .ToolBar(toolbar => {
-        toolbar.Create();
-        toolbar.Save();
+    toolbar.Create();
+    toolbar.Save();
     })
-    .Height(500)
+   
     .Editable(editable => editable.Mode(GridEditMode.InCell))
     .Pageable()
-    
+
     .Navigatable()
     .Sortable()
     .Scrollable()
-   .DataSource(datasource => datasource
+    .DataSource(datasource => datasource
+
     .Ajax()
     .Read(read => read.Action("getList", "Employees"))
-    .PageSize(2)
+
+
+    .Destroy(d => d.Action("Delete", "Employees"))
     .Create(c => c.Action("Create", "Employees"))
-    .Update(c => c.Action("Update", "Employees"))
-    .Destroy(c => c.Action("Delete", "Employees"))
+    .Update(u => u.Action("Update", "Employees"))
+    .PageSize(2)
 
 
     .Model(m =>
     {
-        m.Id(p => p.Id);
-        m.Field(p => p.Id).Editable(false).DefaultValue(0);
+    m.Id(p => p.Id);
+    m.Field(p => p.Id).Editable(false).DefaultValue(0);
     })
 
     )
@@ -71,11 +76,13 @@
 
 
 
-)
-<script>
-    function parameterMap(options, operation) {
-        if (operation !== "read" && options.models) {
-            return { models: kendo.stringify(options.models) };
+    )
+    <script>
+        function parameterMap(options, operation) {
+            if (operation !== "read" && options.models) {
+                return { models: kendo.stringify(options.models) };
+            }
         }
-    }
-</script>
+
+
+    </script>

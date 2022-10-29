@@ -20,49 +20,76 @@ namespace KendoUI_EmployeesManagerV3.Controllers
         {
             return View();
         }
-        public ActionResult getList([DataSourceRequest] DataSourceRequest req)
+        public JsonResult getList([DataSourceRequest] DataSourceRequest req)
         {
             List<Employees> list = db.Employees.ToList();
             return Json(list.ToDataSourceResult(req), JsonRequestBehavior.AllowGet);
         }
 
-        
-        //public ActionResult Delete([DataSourceRequest] DataSourceRequest req , Employees e)
-        //{
-        //    if(e == null)
-        //    {
-        //        Response.StatusCode = 404;
-        //    }
-        //    else
-        //    {
-        //        Employees User = db.Employees.SingleOrDefault(n => n.Id == e.Id);
-        //        if(User == null)
-        //        {
-        //            Response.StatusCode = 404;
-        //        }
-        //        else
-        //        {
-        //            db.Employees.Remove(User);
-        //            db.SaveChanges();
-                   
-        //        }
-               
-        //    }
-        //   return View();
-        //}
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(Employees product)
+        public JsonResult Delete([DataSourceRequest] DataSourceRequest req, Employees e)
         {
-            RouteValueDictionary routeValues;
+            if (e == null)
+            {
+                Response.StatusCode = 404;
+            }
+            else
+            {
+                Employees User = db.Employees.SingleOrDefault(n => n.Id == e.Id);
+                if (User == null)
+                {
+                    Response.StatusCode = 404;
+                }
+                else
+                {
+                    db.Employees.Remove(User);
+                    db.SaveChanges();
 
-            //Delete the record
-            db.Employees.Remove(product);
+                }
 
-            routeValues = this.GridRouteValues();
-
-            //Redisplay the grid
-            return RedirectToAction("Index", routeValues);
+            }
+            return Json(ModelState.IsValid ? true : ModelState.ToDataSourceResult());
         }
+
+        public JsonResult Create([DataSourceRequest] DataSourceRequest req, Employees e)
+        {
+
+            Employees newEmployee = new Employees();
+
+            newEmployee.Name = e.Name;
+            newEmployee.Email = e.Email;
+            newEmployee.Address = e.Address;
+            newEmployee.Phone = e.Phone;
+
+            db.Employees.Add(newEmployee);
+            db.SaveChanges();
+
+            return Json(ModelState.IsValid ? true : ModelState.ToDataSourceResult());
+
+
+        }
+        public JsonResult Update([DataSourceRequest] DataSourceRequest req, Employees e)
+        {
+
+            Employees editEmployee = db.Employees.SingleOrDefault(n => n.Id == e.Id);
+            if(editEmployee != null)
+            {
+                editEmployee.Name = e.Name;
+                editEmployee.Email = e.Email;
+                editEmployee.Address = e.Address;
+                editEmployee.Phone = e.Phone;
+
+             
+                db.SaveChanges();
+            }
+
+            
+
+            return Json(ModelState.IsValid ? true : ModelState.ToDataSourceResult());
+
+
+        }
+
+
     }
 }
