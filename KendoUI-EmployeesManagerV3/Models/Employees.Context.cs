@@ -22,7 +22,7 @@ namespace KendoUI_EmployeesManagerV3.Models
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            
         }
     
         public DbSet<Employees> Employees { get; set; }
